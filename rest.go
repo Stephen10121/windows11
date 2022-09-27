@@ -33,17 +33,18 @@ func testPostArticles(w http.ResponseWriter, r *http.Request) {
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: Home Endpoint.")
-	fmt.Fprintf(w, "Homepage Endpoint Hit")
+	http.ServeFile(w, r, "./templates/index.html")
 }
 
 func handleRequests() {
 
-	myRouter := mux.NewRouter().StrictSlash(true)
+	myRouter := mux.NewRouter()
 
-	fmt.Println("Serving home page. 8081")
-	myRouter.HandleFunc("/", homePage).Methods("GET")
 	myRouter.HandleFunc("/articles", allArticles).Methods("GET")
 	myRouter.HandleFunc("/articles", testPostArticles).Methods("POST")
+	myRouter.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+
+	fmt.Println("Serving home page. 8081")
 	log.Fatal(http.ListenAndServe(":8081", myRouter))
 }
 
