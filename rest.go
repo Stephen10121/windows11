@@ -1,47 +1,72 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 
+	socketio "github.com/googollee/go-socket.io"
+	"github.com/googollee/go-socket.io/engineio"
+	"github.com/googollee/go-socket.io/engineio/transport"
+	"github.com/googollee/go-socket.io/engineio/transport/polling"
+	"github.com/googollee/go-socket.io/engineio/transport/websocket"
 	"github.com/gorilla/mux"
 )
 
-type Article struct {
-	Title   string `json:"Title"`
-	Desc    string `json:"desc"`
-	Content string `json:"content"`
+func test(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("hello")
+	fmt.Fprint(w, "hello there")
 }
 
-type Articles []Article
-
-func allArticles(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: All Articles Endpoint")
-	articles := Articles{
-		Article{Title: "Test title", Desc: "Test Desc", Content: "Hello World"},
-	}
-
-	json.NewEncoder(w).Encode(articles)
-}
-
-func testPostArticles(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: Post Article Endpoint.")
-	fmt.Fprintf(w, "Post articles Endpoint Hit")
-}
-
-func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: Home Endpoint.")
-	http.ServeFile(w, r, "./templates/index.html")
+var allowOriginFunc = func(r *http.Request) bool {
+	return true
 }
 
 func handleRequests() {
-
 	myRouter := mux.NewRouter()
+	server := socketio.NewServer(&engineio.Options{
+		Transports: []transport.Transport{
+			&polling.Transport{
+				CheckOrigin: allowOriginFunc,
+			},
+			&websocket.Transport{
+				CheckOrigin: allowOriginFunc,
+			},
+		},
+	})
 
-	myRouter.HandleFunc("/articles", allArticles).Methods("GET")
-	myRouter.HandleFunc("/articles", testPostArticles).Methods("POST")
+	server.OnConnect("/", func(s socketio.Conn) error {
+		s.SetContext("")
+		fmt.Println("connected:", s.ID())
+		return nil
+	})
+
+	server.OnEvent("/", "test", func(s socketio.Conn, msg string) {
+		log.Println("test:", msg)
+		s.Emit("test", "test "+msg)
+	})
+
+	server.OnError("/", func(s socketio.Conn, e error) {
+		log.Println("meet error:", e)
+	})
+
+	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
+		log.Println("closed", reason)
+	})
+
+	// go func() {
+	// 	fmt.Println("Attempting to run socket server.")
+	// 	if err := server.Serve(); err != nil {
+	// 		fmt.Println("Something wrong.")
+	// 		log.Fatalf("socketio listen error: %s\n", err)
+	// 	} else {
+	// 		fmt.Println("Socket Server running.")
+	// 	}
+	// }()
+	// defer server.Close()
+
+	myRouter.HandleFunc("/test", test).Methods("GET")
+	myRouter.Handle("/socket.io/", server)
 	myRouter.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 
 	fmt.Println("Serving home page. 8081")
