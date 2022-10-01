@@ -37,6 +37,7 @@
     { id: "icon81", name: "Recycle Bin", img: "recycle.png", focus: false },
     { id: "icon82", name: "Recycle Bin", img: "recycle.png", focus: false },
     { id: "icon93", name: "Recycle Bin", img: "recycle.png", focus: false },
+    { id: "icon101" name: "Trash Can", img: "recycle.png", focus: false},
   ];
 
   function mouseDown(event: any) {
