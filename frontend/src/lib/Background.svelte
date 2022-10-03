@@ -1,5 +1,6 @@
 <script lang="ts">
   import Icon from "./Icon.svelte";
+  import RightClickMenu from "./RightClickMenu.svelte";
 
   type MouseInfo = {
     x: number;
@@ -9,40 +10,29 @@
   let mouseIsDown: MouseInfo = { x: 0, y: 0, down: false };
   let box = null;
   let icons = [
-    { id: "icon1", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon2", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon3", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon11", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon12", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon13", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon21", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon22", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon23", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon31", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon32", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon33", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon41", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon42", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon43", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon51", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon52", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon53", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon63", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon61", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon62", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon73", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon71", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon72", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon83", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon81", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon82", name: "Recycle Bin", img: "recycle.png", focus: false },
-    { id: "icon93", name: "Recycle Bin", img: "recycle.png", focus: false },
+    {
+      id: "iconRecycle",
+      name: "Recycle Bin",
+      img: "recycle.png",
+      focus: false,
+    },
+    {
+      id: "iconFolder",
+      name: "File Explorer",
+      img: "folder.png",
+      focus: false,
+    },
+    {
+      id: "iconFolder1",
+      name: "File Explorer",
+      img: "folder.png",
+      focus: false,
+    },
   ];
 
   function mouseDown(event: any) {
     box.style.width = `0px`;
     box.style.height = `0px`;
-    box.style.display = "block";
     mouseIsDown = {
       x: event.clientX,
       y: event.clientY,
@@ -50,6 +40,8 @@
     };
     box.style.top = `${mouseIsDown.y}px`;
     box.style.left = `${mouseIsDown.x}px`;
+    box.style.display = "block";
+
     for (let i = 0; i < icons.length; i++) {
       icons[i].focus = false;
     }
@@ -110,7 +102,6 @@
       }
       for (let i = 0; i < icons.length; i++) {
         let overlap = detectOverlap(box, document.getElementById(icons[i].id));
-        console.log(overlap);
         if (overlap) {
           icons[i].focus = true;
         } else {
@@ -126,10 +117,11 @@
 </script>
 
 <div class="background">
+  <RightClickMenu />
   {#each icons as icon}
-    <div class="icon {icon.focus ? 'focus' : ''}" id={icon.id}>
+    <button class="icon {icon.focus ? 'focus' : ''}" id={icon.id}>
       <Icon name={icon.name} imgLink={icon.img} />
-    </div>
+    </button>
   {/each}
   <div class="box" bind:this={box} />
 </div>
@@ -162,13 +154,16 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 10px;
     border-radius: 2px;
+    padding: 10px;
+    gap: 5px;
     transition: background-color 0.15s linear;
     margin: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    background: none;
+    border: none;
   }
 
   .icon.focus {

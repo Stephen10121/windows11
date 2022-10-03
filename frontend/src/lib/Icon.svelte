@@ -12,10 +12,13 @@
 <style>
   .imgCover {
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .imgCover img {
-    width: 100%;
+    width: 80%;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -36,6 +39,7 @@
       Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif !important;
     width: 100%;
     cursor: default;
+    color: var(--file-icon-color);
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;

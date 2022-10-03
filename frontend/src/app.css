@@ -5,9 +5,17 @@
   text-decoration: none;
 }
 
+@font-face {
+  font-family: "Segoe UI";
+  src: url("/fonts/SegoeUIVF.ttf");
+}
+
 :root {
   --body-background-color: rgb(27, 29, 46);
+  --file-icon-color: rgb(255, 255, 255);
+  --main-font: "Segoe UI";
 }
+
 
 html {
   font-size: 10px;
