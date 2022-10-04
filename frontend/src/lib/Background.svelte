@@ -15,39 +15,44 @@
       name: "Recycle Bin",
       img: "recycle.png",
       focus: false,
+      click: false,
     },
     {
       id: "iconFolder",
       name: "File Explorer",
       img: "folder.png",
       focus: false,
+      click: false,
     },
     {
       id: "iconFolder1",
       name: "File Explorer",
       img: "folder.png",
       focus: false,
+      click: false,
     },
   ];
 
   function mouseDown(event: any) {
-    box.style.width = `0px`;
-    box.style.height = `0px`;
-    mouseIsDown = {
-      x: event.clientX,
-      y: event.clientY,
-      down: true,
-    };
-    box.style.top = `${mouseIsDown.y}px`;
-    box.style.left = `${mouseIsDown.x}px`;
-    box.style.display = "block";
+    if (event.target.id === "background") {
+      box.style.width = `0px`;
+      box.style.height = `0px`;
+      mouseIsDown = {
+        x: event.clientX,
+        y: event.clientY,
+        down: true,
+      };
+      box.style.top = `${mouseIsDown.y}px`;
+      box.style.left = `${mouseIsDown.x}px`;
+      box.style.display = "block";
+    }
 
     for (let i = 0; i < icons.length; i++) {
       icons[i].focus = false;
     }
   }
 
-  function mouseUp(_event) {
+  function mouseUp(_event: any) {
     box.style.width = `0px`;
     box.style.height = `0px`;
     box.style.display = "none";
@@ -111,16 +116,32 @@
     }
   }
 
+  function buttonClick(id2: string) {
+    const index = icons.findIndex(({ id }) => id === id2);
+    icons[index].click = true;
+    setTimeout(() => {
+      icons[index].click = false;
+    }, 100);
+  }
+
   document.body.addEventListener("mousedown", mouseDown);
   document.body.addEventListener("mousemove", mouseMove);
   document.body.addEventListener("mouseup", mouseUp);
 </script>
 
-<div class="background">
+<div class="background" id="background">
   <RightClickMenu />
   {#each icons as icon}
-    <button class="icon {icon.focus ? 'focus' : ''}" id={icon.id}>
-      <Icon name={icon.name} imgLink={icon.img} />
+    <button
+      class="icon {icon.focus ? 'focus' : ''} {icon.click
+        ? 'clickAnimation'
+        : ''}"
+      id={icon.id}
+      on:click={() => {
+        buttonClick(icon.id);
+      }}
+    >
+      <Icon name={icon.name} imgLink={icon.img} clicked={icon.click} />
     </button>
   {/each}
   <div class="box" bind:this={box} />
@@ -172,6 +193,10 @@
     background-color: rgba(116, 116, 116, 0.445);
     filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
     outline: 1px dashed gray;
+  }
+
+  .icon.clickAnimation {
+    padding: 10px;
   }
 
   .icon:hover {

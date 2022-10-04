@@ -15,7 +15,7 @@
     filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    padding: 5px;
+    padding: 3px;
   }
   button {
     width: 100%;

@@ -1,10 +1,11 @@
 <script lang="ts">
   export let imgLink: string;
   export let name: string;
+  export let clicked: boolean;
 </script>
 
 <!-- svelte-ignore a11y-img-redundant-alt -->
-<div class="imgCover">
+<div class="imgCover {clicked ? 'clicked' : ''}">
   <img src={imgLink} alt="Icon Image" />
 </div>
 <p>{name}</p>
@@ -15,6 +16,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: padding 0.05s linear;
+  }
+
+  .imgCover.clicked {
+    padding: 5px;
   }
 
   .imgCover img {
