@@ -1,4 +1,5 @@
 <script lang="ts">
+  import DebugPanel from "./DebugPanel.svelte";
   import Icon from "./Icon.svelte";
   import RightClickMenu from "./RightClickMenu.svelte";
 
@@ -7,6 +8,13 @@
     y: number;
     down: boolean;
   };
+
+  // Debug Variables
+
+  let folderSelected = false;
+
+  // End Debug Variables
+
   let mouseIsDown: MouseInfo = { x: 0, y: 0, down: false };
   let box = null;
   let icons = [
@@ -130,7 +138,12 @@
 </script>
 
 <div class="background" id="background">
-  <RightClickMenu />
+  <DebugPanel
+    on:folderSelected={({ detail }) => {
+      folderSelected = detail;
+    }}
+  />
+  <RightClickMenu {folderSelected} />
   {#each icons as icon}
     <button
       class="icon {icon.focus ? 'focus' : ''} {icon.click
