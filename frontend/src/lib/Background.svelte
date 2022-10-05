@@ -46,6 +46,13 @@
       focus: false,
       click: false,
     },
+    {
+      id: "iconAboutMe",
+      name: "aboutMe.txt",
+      img: "txtfile.ico",
+      focus: false,
+      click: false,
+    },
   ];
 
   function mouseDown(event: any) {
@@ -73,13 +80,13 @@
         };
       }
       folderSelected = false;
-      return;
+    } else {
+      menu = {
+        x: event.clientX,
+        y: event.clientY,
+        show: true,
+      };
     }
-    menu = {
-      x: event.clientX,
-      y: event.clientY,
-      show: true,
-    };
   }
 
   function buttonClick(id2: string) {
