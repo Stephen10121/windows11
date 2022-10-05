@@ -1,13 +1,29 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
+  type Menu = {
+    x: number;
+    y: number;
+    show: boolean;
+  };
   export let folderSelected: boolean;
+  export let menu: Menu;
 </script>
 
-<div class="menu">
+<div
+  class="menu {menu.show ? 'show' : ''}"
+  style="top: {menu.y}px;left:{menu.x}px"
+>
   <button>
     <div class="imgCover"><img src="terminal.png" alt="Terminal Icon" /></div>
     <p>Open in Terminal</p>
   </button>
-  <button class={folderSelected ? "" : "unable"}>
+  <button
+    class={folderSelected ? "" : "unable"}
+    on:click={() => {
+      dispatch("trash", true);
+    }}
+  >
     <div class="imgCover filter"><img src="trash.svg" alt="Trash" /></div>
     <p>Delete Shortcut/s</p>
   </button>
@@ -16,21 +32,24 @@
 <style>
   .menu {
     position: fixed;
-    top: 100px;
-    left: 50%;
     width: 200px;
     height: fit-content;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    background-color: rgba(51, 51, 51, 0.705);
+    background-color: rgba(51, 51, 51, 0.418);
     filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     padding: 3px;
-    display: flex;
+    display: none;
     gap: 3px;
     flex-direction: column;
   }
+
+  .menu.show {
+    display: flex;
+  }
+
   button {
     width: 100%;
     height: 35px;

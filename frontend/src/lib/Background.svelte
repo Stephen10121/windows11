@@ -2,6 +2,7 @@
   import DebugPanel from "./DebugPanel.svelte";
   import Icon from "./Icon.svelte";
   import RightClickMenu from "./RightClickMenu.svelte";
+  import { mouseMove } from "./mouse";
 
   type MouseInfo = {
     x: number;
@@ -9,12 +10,18 @@
     down: boolean;
   };
 
+  type Menu = {
+    x: number;
+    y: number;
+    show: boolean;
+  };
+
   // Debug Variables
 
   let folderSelected = false;
 
   // End Debug Variables
-
+  let menu: Menu = { x: 0, y: 0, show: false };
   let mouseIsDown: MouseInfo = { x: 0, y: 0, down: false };
   let box = null;
   let icons = [
@@ -42,7 +49,7 @@
   ];
 
   function mouseDown(event: any) {
-    if (event.target.id === "background") {
+    if (event.target.id === "background" && event.which === 1) {
       box.style.width = `0px`;
       box.style.height = `0px`;
       mouseIsDown = {
@@ -54,74 +61,25 @@
       box.style.left = `${mouseIsDown.x}px`;
       box.style.display = "block";
     }
-
-    for (let i = 0; i < icons.length; i++) {
-      icons[i].focus = false;
-    }
-  }
-
-  function mouseUp(_event: any) {
-    box.style.width = `0px`;
-    box.style.height = `0px`;
-    box.style.display = "none";
-    mouseIsDown.down = false;
-  }
-
-  var detectOverlap = (function () {
-    function getPositions(elem) {
-      var pos = elem.getBoundingClientRect();
-      return [
-        [pos.left, pos.right],
-        [pos.top, pos.bottom],
-      ];
-    }
-
-    function comparePositions(p1, p2) {
-      var r1, r2;
-      if (p1[0] < p2[0]) {
-        r1 = p1;
-        r2 = p2;
-      } else {
-        r1 = p2;
-        r2 = p1;
-      }
-      return r1[1] > r2[0] || r1[0] === r2[0];
-    }
-
-    return function (a, b) {
-      var pos1 = getPositions(a),
-        pos2 = getPositions(b);
-      return (
-        comparePositions(pos1[0], pos2[0]) && comparePositions(pos1[1], pos2[1])
-      );
-    };
-  })();
-
-  function mouseMove(event: any) {
-    if (mouseIsDown.down) {
-      if (event.clientX < mouseIsDown.x) {
-        box.style.left = `${event.clientX}px`;
-        box.style.width = `${mouseIsDown.x - event.clientX}px`;
-      } else {
-        box.style.left = `${mouseIsDown.x}px`;
-        box.style.width = `${event.clientX - mouseIsDown.x}px`;
-      }
-      if (event.clientY < mouseIsDown.y) {
-        box.style.top = `${event.clientY}px`;
-        box.style.height = `${mouseIsDown.y - event.clientY}px`;
-      } else {
-        box.style.top = `${mouseIsDown.y}px`;
-        box.style.height = `${event.clientY - mouseIsDown.y}px`;
-      }
-      for (let i = 0; i < icons.length; i++) {
-        let overlap = detectOverlap(box, document.getElementById(icons[i].id));
-        if (overlap) {
-          icons[i].focus = true;
-        } else {
+    if (event.which !== 3) {
+      if (event.target.id === "background") {
+        for (let i = 0; i < icons.length; i++) {
           icons[i].focus = false;
         }
+        menu = {
+          x: event.clientX,
+          y: event.clientY,
+          show: false,
+        };
       }
+      folderSelected = false;
+      return;
     }
+    menu = {
+      x: event.clientX,
+      y: event.clientY,
+      show: true,
+    };
   }
 
   function buttonClick(id2: string) {
@@ -132,23 +90,74 @@
     }, 100);
   }
 
-  document.body.addEventListener("mousedown", mouseDown);
-  document.body.addEventListener("mousemove", mouseMove);
-  document.body.addEventListener("mouseup", mouseUp);
+  function upKey(event: any) {
+    if (event.key === "Delete") {
+      let icons2 = [];
+      for (let i = 0; i < icons.length; i++) {
+        if (!icons[i].focus) {
+          icons2.push(icons[i]);
+        }
+      }
+      icons = icons2;
+    }
+  }
+
+  function mouseMoveFunction(e) {
+    let movedMouse = mouseMove({ event: e, mouseIsDown, box, icons });
+    icons = movedMouse.icons;
+    if (movedMouse.folderSelected) {
+      folderSelected = true;
+    }
+  }
+
+  function mouseUpFunction(_e: any) {
+    box.style.width = `0px`;
+    box.style.height = `0px`;
+    box.style.display = "none";
+    mouseIsDown.down = false;
+  }
+
+  // document.body.addEventListener("mousedown", mouseDown);
+  // document.body.addEventListener("mousemove", mouseMoveFunction);
+  // document.body.addEventListener("mouseup", mouseUpFunction);
+  document.body.addEventListener("keyup", upKey);
 </script>
 
-<div class="background" id="background">
+<div
+  class="background"
+  id="background"
+  on:mousedown={mouseDown}
+  on:mousemove={mouseMoveFunction}
+  on:mouseup={mouseUpFunction}
+  on:contextmenu|preventDefault={() => {
+    return false;
+  }}
+>
   <DebugPanel
     on:folderSelected={({ detail }) => {
       folderSelected = detail;
     }}
+    on:lightTheme={({ detail }) => {
+      console.log(detail);
+    }}
   />
-  <RightClickMenu {folderSelected} />
+  <RightClickMenu
+    {folderSelected}
+    {menu}
+    on:trash={() => {
+      let icons2 = [];
+      for (let i = 0; i < icons.length; i++) {
+        if (!icons[i].focus) {
+          icons2.push(icons[i]);
+        }
+      }
+      icons = icons2;
+      menu = { show: false, x: menu.x, y: menu.y };
+    }}
+  />
   {#each icons as icon}
     <button
-      class="icon {icon.focus ? 'focus' : ''} {icon.click
-        ? 'clickAnimation'
-        : ''}"
+      class="icon {icon.focus ? 'focus' : ''} {icon.click ? 'clicked' : ''}"
       id={icon.id}
       on:click={() => {
         buttonClick(icon.id);
@@ -191,13 +200,18 @@
     border-radius: 2px;
     padding: 10px;
     gap: 5px;
-    transition: background-color 0.15s linear;
+    transition: background-color 0.15s linear, gap 0.05s linear;
     margin: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     background: none;
     border: none;
+    outline: none;
+  }
+
+  .icon.clicked {
+    gap: 2px;
   }
 
   .icon.focus {
@@ -208,11 +222,8 @@
     outline: 1px dashed gray;
   }
 
-  .icon.clickAnimation {
-    padding: 10px;
-  }
-
-  .icon:hover {
+  .icon:hover,
+  .icon:focus {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     background-color: rgba(116, 116, 116, 0.445);

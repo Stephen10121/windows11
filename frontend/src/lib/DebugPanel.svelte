@@ -6,14 +6,19 @@
 <div class="debugPanel" id="debugPanel">
   <h1>Debug</h1>
   <div class="checkbox">
-    <label for="check">Folder selected</label>
+    <p>Add folder</p>
+    <input type="text" id="check" placeholder="Name " />
+    <button>Add Folder</button>
+  </div>
+  <div class="checkbox">
+    <label for="lightTheme">Light theme</label>
     <input
       type="checkbox"
-      name="check"
-      id="check"
+      name="lightTheme"
+      id="lightTheme"
       on:change={(e) => {
         //@ts-ignore
-        dispatch("folderSelected", e.target.checked);
+        dispatch("lightTheme", e.target.checked);
       }}
     />
   </div>
@@ -29,5 +34,11 @@
     background-color: black;
     border: 1px solid white;
     padding: 10px;
+    z-index: 100;
+  }
+
+  .debugPanel div {
+    border-top: 1px solid white;
+    padding: 10px 0;
   }
 </style>
