@@ -128,6 +128,10 @@
   // document.body.addEventListener("mousemove", mouseMoveFunction);
   // document.body.addEventListener("mouseup", mouseUpFunction);
   document.body.addEventListener("keyup", upKey);
+
+  const disableselect = (_e: any) => {
+    return false;
+  };
 </script>
 
 <div
@@ -164,6 +168,8 @@
   />
   {#each icons as icon}
     <button
+      on:selectstart={disableselect}
+      on:mousedown={disableselect}
       class="icon {icon.focus ? 'focus' : ''} {icon.click ? 'clicked' : ''}"
       id={icon.id}
       on:click={() => {

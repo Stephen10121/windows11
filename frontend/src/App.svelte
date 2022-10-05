@@ -2,12 +2,9 @@
   import Background from "./lib/Background.svelte";
   import Taskbar from "./lib/Taskbar.svelte";
   import io from "socket.io-client";
+  import NotePad from "./lib/NotePad.svelte";
   let backgroundImage = "background-dark.jpg";
-  const disableselect = (_e: any) => {
-    return false;
-  };
-  document.onselectstart = disableselect;
-  document.onmousedown = disableselect;
+
   const socket = io();
   console.log(socket);
   socket.emit("test", "yesy");
@@ -19,6 +16,7 @@
 
 <main style="background-image: url({backgroundImage})">
   <Background />
+  <NotePad />
   <Taskbar />
 </main>
 

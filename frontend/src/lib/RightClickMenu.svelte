@@ -40,6 +40,7 @@
     filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    z-index: 5;
     padding: 3px;
     display: none;
     gap: 3px;

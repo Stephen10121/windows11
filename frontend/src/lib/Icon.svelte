@@ -2,13 +2,26 @@
   export let imgLink: string;
   export let name: string;
   export let clicked: boolean;
+
+  const disableselect = (_e: any) => {
+    return false;
+  };
 </script>
 
 <!-- svelte-ignore a11y-img-redundant-alt -->
-<div class="imgCover {clicked ? 'clicked' : ''}">
-  <img src={imgLink} alt="Icon Image" />
+<div
+  class="imgCover {clicked ? 'clicked' : ''}"
+  on:selectstart={disableselect}
+  on:mousedown={disableselect}
+>
+  <img
+    src={imgLink}
+    alt="Icon Image"
+    on:selectstart={disableselect}
+    on:mousedown={disableselect}
+  />
 </div>
-<p>{name}</p>
+<p on:selectstart={disableselect} on:mousedown={disableselect}>{name}</p>
 
 <style>
   .imgCover {
