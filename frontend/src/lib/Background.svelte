@@ -16,6 +16,14 @@
     show: boolean;
   };
 
+  type Icons = {
+    id: string;
+    name: string;
+    img: string;
+    focus: boolean;
+    click: boolean;
+  };
+
   // Debug Variables
 
   let folderSelected = false;
@@ -53,7 +61,7 @@
       focus: false,
       click: false,
     },
-  ];
+  ] as Icons[];
 
   function mouseDown(event: any) {
     if (event.target.id === "background" && event.which === 1) {
@@ -90,6 +98,7 @@
   }
 
   function buttonClick(id2: string) {
+    console.log(id2);
     const index = icons.findIndex(({ id }) => id === id2);
     icons[index].click = true;
     setTimeout(() => {
@@ -145,6 +154,18 @@
   }}
 >
   <DebugPanel
+    {icons}
+    on:addIcon={({ detail }) => {
+      let icons2 = icons;
+      icons2.push({
+        id: detail.imageId,
+        click: false,
+        focus: true,
+        img: detail.imageVal,
+        name: detail.folderName,
+      });
+      icons = icons2;
+    }}
     on:folderSelected={({ detail }) => {
       folderSelected = detail;
     }}
