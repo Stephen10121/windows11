@@ -3,6 +3,7 @@
   import Taskbar from "./lib/Taskbar.svelte";
   import io from "socket.io-client";
   import NotePad from "./lib/NotePad.svelte";
+  import TestWindow from "./lib/TestWindow.svelte";
   let backgroundImage = "background-dark.jpg";
 
   const socket = io();
@@ -17,6 +18,7 @@
 <main style="background-image: url({backgroundImage})">
   <Background />
   <NotePad />
+  <TestWindow />
   <Taskbar />
 </main>
 

@@ -2,22 +2,37 @@
   export let name: string;
   export let icon: string;
   let mouseDown = false;
-  let window;
+  let window2;
   let oldx;
   let oldy;
   let box;
+  let rightHalf;
+  let leftHalf;
 
   function moveMouse(e: any) {
     box.style.top = "-500px";
     box.style.left = "-500px";
     box.style.width = "calc(100% + 1000px)";
     box.style.height = "calc(100% + 1000px)";
-    window.style.left = `${e.pageX - oldx}px`;
-    window.style.top = `${e.pageY - oldy}px`;
+    window2.style.left = `${e.pageX - oldx}px`;
+    window2.style.top = `${e.pageY - oldy}px`;
+
+    if (e.pageX + 10 >= document.body.offsetWidth) {
+      rightHalf.style.width = "50vw";
+    } else {
+      rightHalf.style.width = "0";
+    }
+    if (e.pageX === 0) {
+      leftHalf.style.width = "50vw";
+    } else {
+      leftHalf.style.width = "0";
+    }
   }
 </script>
 
-<div class="window" bind:this={window}>
+<div class="halfScreen" bind:this={leftHalf}><div /></div>
+<div class="halfScreenright" bind:this={rightHalf}><div /></div>
+<div class="window" bind:this={window2}>
   <div class="header">
     <div class="iconName">
       <div class="imgCover"><img src={icon} alt="Icon" /></div>
@@ -32,12 +47,25 @@
           oldy = event.layerY;
           mouseDown = true;
         }}
-        on:mouseup={() => {
+        on:mouseup={(e) => {
           mouseDown = false;
           box.style.top = "0";
           box.style.height = "100%";
           box.style.left = "0";
           box.style.width = "100%";
+          if (e.pageX + 10 >= document.body.offsetWidth) {
+            window2.style.width = "50vw";
+            window2.style.height = "calc(100vh - 48px)";
+            window2.style.top = "0px";
+            window2.style.left = "50%";
+            rightHalf.style.width = "0";
+          } else if (e.pageX === 0) {
+            window2.style.width = "50vw";
+            window2.style.height = "calc(100vh - 48px)";
+            window2.style.top = "0px";
+            window2.style.left = "0";
+            leftHalf.style.width = "0";
+          }
         }}
         on:mousemove={(e) => {
           if (mouseDown) {
@@ -161,5 +189,35 @@
   .close img {
     width: 100%;
     filter: invert(1);
+  }
+  .halfScreen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: calc(100vh - 48px);
+    padding: 10px;
+    transition: width 0.15s linear;
+  }
+
+  .halfScreenright {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 0;
+    height: calc(100vh - 48px);
+    padding: 10px;
+    transition: width 0.15s linear;
+  }
+
+  .halfScreen div,
+  .halfScreenright div {
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background-color: rgba(131, 131, 131, 0.781);
+    filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
   }
 </style>
