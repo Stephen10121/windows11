@@ -1,11 +1,8 @@
 <script lang="ts">
+  import type { Menu } from "src/functions/store";
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
-  type Menu = {
-    x: number;
-    y: number;
-    show: boolean;
-  };
+
   export let folderSelected: boolean;
   export let menu: Menu;
 </script>
@@ -67,19 +64,7 @@
   }
 
   button.unable {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    background-color: rgba(0, 0, 0, 0.219);
+    background: rgba(0, 0, 0, 0.219);
     cursor: default;
   }
 

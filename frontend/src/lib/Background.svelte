@@ -2,27 +2,14 @@
   import DebugPanel from "./DebugPanel.svelte";
   import Icon from "./Icon.svelte";
   import RightClickMenu from "./RightClickMenu.svelte";
-  import { mouseMove } from "./mouse";
-
-  type MouseInfo = {
-    x: number;
-    y: number;
-    down: boolean;
-  };
-
-  type Menu = {
-    x: number;
-    y: number;
-    show: boolean;
-  };
-
-  type Icons = {
-    id: string;
-    name: string;
-    img: string;
-    focus: boolean;
-    click: boolean;
-  };
+  import { mouseMove, type MouseInfo } from "./mouse";
+  import { onDestroy } from "svelte";
+  import {
+    lightTheme,
+    windowIcons,
+    type IconType,
+    type Menu,
+  } from "../functions/store";
 
   // Debug Variables
 
@@ -31,37 +18,14 @@
   // End Debug Variables
   let menu: Menu = { x: 0, y: 0, show: false };
   let mouseIsDown: MouseInfo = { x: 0, y: 0, down: false };
-  let box = null;
-  let icons = [
-    {
-      id: "iconRecycle",
-      name: "Recycle Bin",
-      img: "recycle.png",
-      focus: false,
-      click: false,
-    },
-    {
-      id: "iconFolder",
-      name: "File Explorer",
-      img: "folder.png",
-      focus: false,
-      click: false,
-    },
-    {
-      id: "iconFolder1",
-      name: "File Explorer",
-      img: "folder.png",
-      focus: false,
-      click: false,
-    },
-    {
-      id: "iconAboutMe",
-      name: "aboutMe.txt",
-      img: "txtfile.ico",
-      focus: false,
-      click: false,
-    },
-  ] as Icons[];
+  let box: HTMLElement;
+  let icons: IconType[] = [];
+  let isLightTheme = false;
+
+  const lightThemeUnsubscribe = lightTheme.subscribe(
+    (data) => (isLightTheme = data)
+  );
+  const iconUnsubscribe = windowIcons.subscribe((data) => (icons = data));
 
   function mouseDown(event: any) {
     if (event.target.id === "background" && event.which === 1) {
@@ -98,7 +62,6 @@
   }
 
   function buttonClick(id2: string) {
-    console.log(id2);
     const index = icons.findIndex(({ id }) => id === id2);
     icons[index].click = true;
     setTimeout(() => {
@@ -114,16 +77,15 @@
           icons2.push(icons[i]);
         }
       }
-      icons = icons2;
+      windowIcons.update(() => icons2);
     }
   }
 
-  function mouseMoveFunction(e) {
-    let movedMouse = mouseMove({ event: e, mouseIsDown, box, icons });
-    icons = movedMouse.icons;
-    if (movedMouse.folderSelected) {
-      folderSelected = true;
-    }
+  function mouseMoveFunction(e: MouseEvent) {
+    let movedMouse = mouseMove(e, mouseIsDown, box, icons, folderSelected);
+
+    windowIcons.update(() => movedMouse.icons);
+    folderSelected = movedMouse.folderSelected;
   }
 
   function mouseUpFunction(_e: any) {
@@ -138,9 +100,24 @@
   // document.body.addEventListener("mouseup", mouseUpFunction);
   document.body.addEventListener("keyup", upKey);
 
-  const disableselect = (_e: any) => {
-    return false;
-  };
+  function iconClicked(iconId: string) {
+    let icons2: IconType[] = [];
+    for (let i = 0; i < icons.length; i++) {
+      if (icons[i].id === iconId) {
+        icons2.push({ ...icons[i], focus: true });
+      } else {
+        icons2.push({ ...icons[i], focus: false });
+      }
+    }
+    windowIcons.update(() => icons2);
+    folderSelected = true;
+  }
+
+  onDestroy(() => {
+    iconUnsubscribe();
+    lightThemeUnsubscribe();
+    document.body.removeEventListener("keyup", upKey);
+  });
 </script>
 
 <div
@@ -155,6 +132,7 @@
 >
   <DebugPanel
     {icons}
+    {isLightTheme}
     on:addIcon={({ detail }) => {
       let icons2 = icons;
       icons2.push({
@@ -164,13 +142,15 @@
         img: detail.imageVal,
         name: detail.folderName,
       });
-      icons = icons2;
+      windowIcons.update(() => icons2);
+      folderSelected = true;
     }}
     on:folderSelected={({ detail }) => {
       folderSelected = detail;
     }}
     on:lightTheme={({ detail }) => {
-      console.log(detail);
+      lightTheme.update(() => detail);
+      console.log();
     }}
   />
   <RightClickMenu
@@ -183,22 +163,24 @@
           icons2.push(icons[i]);
         }
       }
-      icons = icons2;
+      windowIcons.update(() => icons2);
       menu = { show: false, x: menu.x, y: menu.y };
     }}
   />
   {#each icons as icon}
-    <button
-      on:selectstart={disableselect}
-      on:mousedown={disableselect}
-      class="icon {icon.focus ? 'focus' : ''} {icon.click ? 'clicked' : ''}"
-      id={icon.id}
+    <Icon
+      {icon}
+      name={icon.name}
+      imgLink={icon.img}
+      clicked={icon.click}
+      on:dblclick={() => {
+        console.log("doubleClicked");
+      }}
       on:click={() => {
+        iconClicked(icon.id);
         buttonClick(icon.id);
       }}
-    >
-      <Icon name={icon.name} imgLink={icon.img} clicked={icon.click} />
-    </button>
+    />
   {/each}
   <div class="box" bind:this={box} />
 </div>
@@ -222,45 +204,5 @@
     background-color: rgba(40, 82, 160, 0.658);
     border: 2px solid rgb(40, 82, 160);
     display: none;
-  }
-
-  .icon {
-    width: 74px;
-    height: 84px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    border-radius: 2px;
-    padding: 10px;
-    gap: 5px;
-    transition: background-color 0.15s linear, gap 0.05s linear;
-    margin: 4px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    background: none;
-    border: none;
-    outline: none;
-  }
-
-  .icon.clicked {
-    gap: 2px;
-  }
-
-  .icon.focus {
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-color: rgba(116, 116, 116, 0.445);
-    filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
-    outline: 1px dashed gray;
-  }
-
-  .icon:hover,
-  .icon:focus {
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-color: rgba(116, 116, 116, 0.445);
-    filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
   }
 </style>

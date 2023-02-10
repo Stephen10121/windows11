@@ -2,12 +2,12 @@
   export let name: string;
   export let icon: string;
   let mouseDown = false;
-  let window2;
-  let oldx;
-  let oldy;
-  let box;
-  let rightHalf;
-  let leftHalf;
+  let window2: HTMLElement;
+  let oldx: number;
+  let oldy: number;
+  let box: HTMLElement;
+  let rightHalf: HTMLElement;
+  let leftHalf: HTMLElement;
 
   function moveMouse(e: any) {
     box.style.top = "-500px";
@@ -80,7 +80,9 @@
       <button class="close"><img src="x.svg" alt="Close" /></button>
     </div>
   </div>
-  <slot />
+  <div class="rest">
+    <slot />
+  </div>
 </div>
 
 <style>
@@ -106,6 +108,14 @@
     height: 100%;
     display: grid;
     grid-template-columns: auto 135px;
+  }
+
+  .rest {
+    width: 100%;
+    height: 100%;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    overflow: hidden;
   }
 
   .iconName {
@@ -135,9 +145,11 @@
   }
 
   .iconName p {
-    font-size: 1.15rem;
-    color: white;
+    font-size: 1.2rem;
+    color: #ffffff;
     font-weight: 100;
+    word-spacing: 3px;
+    letter-spacing: 1px;
   }
 
   .resize,
@@ -169,6 +181,8 @@
     display: grid;
     grid-template-columns: 45px 45px 45px;
     height: 28px;
+    border-top-right-radius: 5px;
+    overflow: hidden;
   }
 
   .closebuttons button {

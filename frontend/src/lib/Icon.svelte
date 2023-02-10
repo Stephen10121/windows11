@@ -1,27 +1,26 @@
 <script lang="ts">
+  import type { IconType } from "src/functions/store";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+
+  export let icon: IconType;
   export let imgLink: string;
   export let name: string;
   export let clicked: boolean;
-
-  const disableselect = (_e: any) => {
-    return false;
-  };
 </script>
 
-<!-- svelte-ignore a11y-img-redundant-alt -->
-<div
-  class="imgCover {clicked ? 'clicked' : ''}"
-  on:selectstart={disableselect}
-  on:mousedown={disableselect}
+<button
+  on:click={() => dispatch("click")}
+  on:dblclick={() => dispatch("dblclick")}
+  class="icon {icon.focus ? 'focus' : ''} {icon.click ? 'clicked' : ''}"
+  id={icon.id}
 >
-  <img
-    src={imgLink}
-    alt="Icon Image"
-    on:selectstart={disableselect}
-    on:mousedown={disableselect}
-  />
-</div>
-<p on:selectstart={disableselect} on:mousedown={disableselect}>{name}</p>
+  <div class="imgCover {clicked ? 'clicked' : ''}">
+    <img src={imgLink} alt={`Icon Image for ${name}`} />
+  </div>
+  <p>{name}</p>
+</button>
 
 <style>
   .imgCover {
@@ -38,18 +37,6 @@
 
   .imgCover img {
     width: 80%;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
   }
 
   p {
@@ -59,17 +46,45 @@
     width: 100%;
     cursor: default;
     color: var(--file-icon-color);
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+  }
+
+  .icon {
+    width: 74px;
+    height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 2px;
+    padding: 10px;
+    gap: 5px;
+    transition: background-color 0.15s linear, gap 0.05s linear;
+    margin: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    outline: none;
+  }
+
+  .icon.clicked {
+    gap: 2px;
+  }
+
+  .icon.focus {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background-color: rgba(116, 116, 116, 0.445);
+    filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
+    outline: 1px dashed gray;
+  }
+
+  .icon:hover,
+  .icon:focus {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background-color: rgba(116, 116, 116, 0.445);
+    filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
   }
 </style>

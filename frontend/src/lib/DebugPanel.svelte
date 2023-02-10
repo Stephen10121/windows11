@@ -9,6 +9,7 @@
     click: boolean;
   };
   export let icons: Icons[];
+  export let isLightTheme: boolean;
 
   let imageVal: string;
   let folderName: string;
@@ -56,6 +57,7 @@
   <div class="checkbox">
     <label for="lightTheme">Light theme</label>
     <input
+      checked={isLightTheme}
       type="checkbox"
       name="lightTheme"
       id="lightTheme"
