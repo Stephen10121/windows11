@@ -3,13 +3,14 @@
   let textarea: any;
   let text = "About Me";
   let col = text.length;
+  let id = "notepad";
 
   function updateCursor() {
     col = textarea.selectionStart;
   }
 </script>
 
-<Window name="aboutMe.txt - Notepad" icon="notepad.png">
+<Window {id} name="aboutMe.txt - Notepad" icon="notepad.png">
   <div class="notepad">
     <div class="extra">
       <div class="fev">

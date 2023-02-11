@@ -1,15 +1,27 @@
 <script lang="ts">
+  import { onDestroy } from "svelte";
+  import { hitbox } from "../functions/store";
+  import ResizedWindow from "./ResizedWindow.svelte";
+
   export let name: string;
   export let icon: string;
+  export let id: string;
+
   let mouseDown = false;
-  let window2: HTMLElement;
   let oldx: number;
   let oldy: number;
   let box: HTMLElement;
-  let rightHalf: HTMLElement;
-  let leftHalf: HTMLElement;
 
-  function moveMouse(e: any) {
+  let showHitbox = false;
+
+  const hitboxUnsubscribe = hitbox.subscribe((value) => (showHitbox = value));
+
+  function moveMouse(
+    e: MouseEvent,
+    window2: HTMLElement,
+    rightHalf: HTMLElement,
+    leftHalf: HTMLElement
+  ) {
     box.style.top = "-500px";
     box.style.left = "-500px";
     box.style.width = "calc(100% + 1000px)";
@@ -28,17 +40,20 @@
       leftHalf.style.width = "0";
     }
   }
+
+  onDestroy(() => {
+    hitboxUnsubscribe();
+  });
 </script>
 
-<div class="halfScreen" bind:this={leftHalf}><div /></div>
-<div class="halfScreenright" bind:this={rightHalf}><div /></div>
-<div class="window" bind:this={window2}>
+<ResizedWindow {id} let:leftHalf let:rightHalf let:window2>
   <div class="header">
     <div class="iconName">
       <div class="imgCover"><img src={icon} alt="Icon" /></div>
       <p>{name}</p>
       <div
         class="cover"
+        style={showHitbox ? "background-color: #ff000059;" : ""}
         bind:this={box}
         on:mousedown={(event) => {
           //@ts-ignore
@@ -69,7 +84,7 @@
         }}
         on:mousemove={(e) => {
           if (mouseDown) {
-            moveMouse(e);
+            moveMouse(e, window2, rightHalf, leftHalf);
           }
         }}
       />
@@ -83,26 +98,9 @@
   <div class="rest">
     <slot />
   </div>
-</div>
+</ResizedWindow>
 
 <style>
-  .window {
-    position: fixed;
-    z-index: 6;
-    width: 680px;
-    height: 800px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-color: rgba(43, 43, 43, 0.534);
-    filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
-    top: 50px;
-    left: 90px;
-    border-radius: 5px;
-    display: grid;
-    grid-template-rows: 28px auto;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 2px, rgb(51, 51, 51) 0px 0px 0px 1px;
-  }
-
   .header {
     width: 100%;
     height: 100%;
@@ -203,35 +201,5 @@
   .close img {
     width: 100%;
     filter: invert(1);
-  }
-  .halfScreen {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 0;
-    height: calc(100vh - 48px);
-    padding: 10px;
-    transition: width 0.15s linear;
-  }
-
-  .halfScreenright {
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 0;
-    height: calc(100vh - 48px);
-    padding: 10px;
-    transition: width 0.15s linear;
-  }
-
-  .halfScreen div,
-  .halfScreenright div {
-    border-radius: 5px;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-color: rgba(131, 131, 131, 0.781);
-    filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
   }
 </style>

@@ -45,4 +45,15 @@ export const windowIcons = writable<IconType[]>([
     },
 ]);
 
+export interface WindowBox {
+  name: string;
+  icon: string;
+  id: string
+}
+
 export const lightTheme = writable<boolean>(false);
+export const hitbox = writable<boolean>(false);
+export const focused = writable<string>(null);
+export const windows = writable<WindowBox[]>([]);
+
+

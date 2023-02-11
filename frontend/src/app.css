@@ -22,7 +22,7 @@
   --main-font: "Segoe UI";
 }
 
-::-webkit-scrollbar-track
+/* ::-webkit-scrollbar-track
 {
 	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
 	border-radius: 6px;
@@ -43,7 +43,24 @@
 	-webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.3);
 	background-color: #555;
   cursor: default !important;
+} */
+
+::-webkit-scrollbar-track
+{
+	background-color: rgba(0, 0, 0, 0);
 }
+
+::-webkit-scrollbar
+{
+	width: 5px;
+	background-color: rgba(0,0,0,0);
+}
+
+::-webkit-scrollbar-thumb
+{
+	background-color: rgba(255, 255, 255, 0.315);
+}
+
 
 html {
   font-size: 10px;
