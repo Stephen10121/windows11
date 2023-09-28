@@ -4,13 +4,15 @@
   let text = "About Me";
   let col = text.length;
   export let id = "notepad";
+  export let icon = "notepad.png";
+  export let name = "aboutMe.txt - Notepad";
 
   function updateCursor() {
     col = textarea.selectionStart;
   }
 </script>
 
-<Window {id} name="aboutMe.txt - Notepad" icon="notepad.png">
+<Window {id} {name} {icon}>
   <div class="notepad">
     <div class="extra">
       <div class="fev">

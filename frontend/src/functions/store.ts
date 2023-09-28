@@ -45,15 +45,16 @@ export const windowIcons = writable<IconType[]>([
     },
 ]);
 
+type Applications = "notepad" | "window";
+
 export interface WindowBox {
   name: string;
   icon: string;
-  id: string
+  id: string;
+  appType: Applications
 }
 
 export const lightTheme = writable<boolean>(false);
 export const hitbox = writable<boolean>(false);
 export const focused = writable<string>(null);
 export const windows = writable<WindowBox[]>([]);
-
-

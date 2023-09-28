@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { windows } from "../functions/store";
 	import ResizedWindow from "./ResizedWindow.svelte";
 	import WindowDragger from "./WindowDragger.svelte";
 
@@ -10,6 +11,10 @@
 	let oldx: number;
 	let oldy: number;
 	let box: HTMLElement;
+
+	function close() {
+		windows.update((oldWindows) => oldWindows.filter((window) => window.id !== id));
+	}
 
 	function moveMouse(e: MouseEvent, window2: HTMLElement, rightHalf: HTMLElement, leftHalf: HTMLElement) {
 		box.style.top = "-500px";
@@ -45,7 +50,7 @@
 		<div class="closebuttons">
 		<button class="minimize"><div class="dash" /></button>
 		<button class="resize"><div class="box" /></button>
-		<button class="close"><img src="x.svg" alt="Close" /></button>
+		<button class="close" on:click={close}><img src="x.svg" alt="Close" /></button>
 		</div>
 	</div>
 	<div class="rest">
