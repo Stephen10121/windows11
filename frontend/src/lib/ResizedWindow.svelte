@@ -1,11 +1,10 @@
 <script lang="ts">
-import { focused } from "../functions/store";
+	import { focused } from "../functions/store";
     import ResizePointer from "./ResizePointer.svelte";
+	export let id: string;
 
 	const MINIMUM_SCREEN_WIDTH = 470;
 	const MINIMUM_SCREEN_HEIGHT = 300;
-
-export let id: string;
 
 	let resizeWindow: HTMLElement;
 
@@ -85,7 +84,7 @@ export let id: string;
 <div class="halfScreenright" bind:this={rightHalf}><div /></div>
 <div
 	on:mousedown={() => $focused = id}
-	class="window {$focused !== id ? 'notFocus' : ''}"
+	class="window {$focused !== id ? 'notFocused' : ''}"
 	style="z-index: {$focused === id ? '8' : '6'};"
 	bind:this={resizeWindow}
 >
@@ -117,7 +116,7 @@ export let id: string;
 		min-height: 300px;
 	}
 
-	.window.notFocus {
+	.window.notFocused {
 		background-color: rgb(26, 26, 26);
 	}
 
