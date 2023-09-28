@@ -126,10 +126,7 @@
   on:mousedown={mouseDown}
   on:mousemove={mouseMoveFunction}
   on:mouseup={mouseUpFunction}
-  on:contextmenu|preventDefault={() => {
-    return false;
-  }}
->
+  on:contextmenu|preventDefault={() => false}>
   <DebugPanel
     {icons}
     {isLightTheme}

@@ -46,7 +46,7 @@
   });
 </script>
 
-<ResizedWindow {id} let:leftHalf let:rightHalf let:window2>
+<ResizedWindow {id} let:leftHalf let:rightHalf let:resizeWindow>
   <div class="header">
     <div class="iconName">
       <div class="imgCover"><img src={icon} alt="Icon" /></div>
@@ -69,22 +69,22 @@
           box.style.left = "0";
           box.style.width = "100%";
           if (e.pageX + 10 >= document.body.offsetWidth) {
-            window2.style.width = "50vw";
-            window2.style.height = "calc(100vh - 48px)";
-            window2.style.top = "0px";
-            window2.style.left = "50%";
+            resizeWindow.style.width = "50vw";
+            resizeWindow.style.height = "calc(100vh - 48px)";
+            resizeWindow.style.top = "0px";
+            resizeWindow.style.left = "50%";
             rightHalf.style.width = "0";
           } else if (e.pageX === 0) {
-            window2.style.width = "50vw";
-            window2.style.height = "calc(100vh - 48px)";
-            window2.style.top = "0px";
-            window2.style.left = "0";
+            resizeWindow.style.width = "50vw";
+            resizeWindow.style.height = "calc(100vh - 48px)";
+            resizeWindow.style.top = "0px";
+            resizeWindow.style.left = "0";
             leftHalf.style.width = "0";
           }
         }}
         on:mousemove={(e) => {
           if (mouseDown) {
-            moveMouse(e, window2, rightHalf, leftHalf);
+            moveMouse(e, resizeWindow, rightHalf, leftHalf);
           }
         }}
       />

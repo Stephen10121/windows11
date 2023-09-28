@@ -3,7 +3,7 @@
   let textarea: any;
   let text = "About Me";
   let col = text.length;
-  let id = "notepad";
+  export let id = "notepad";
 
   function updateCursor() {
     col = textarea.selectionStart;
