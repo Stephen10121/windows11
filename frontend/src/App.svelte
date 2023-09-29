@@ -5,8 +5,10 @@
 	import TestWindow from "./lib/TestWindow.svelte";
 	import { focused, windows } from "./functions/store";
     import { onMount } from "svelte";
+    import MainMenu from "./lib/taskbar/MainMenu.svelte";
 	let backgroundImage = "background-dark.jpg";
 	let mounted = false;
+	let showMainMenu = false;
 
 	$: {
 		if (mounted) {
@@ -33,6 +35,11 @@
 		}
 		mounted = true;
 	});
+
+
+	function mainMenuClose(e) {
+		showMainMenu = showMainMenu ? e.target.id === "mainMenu" || e.target.id ==="mainMenuOpener" : false
+	}
 </script>
 
 <main style="background-image: url({backgroundImage})">
@@ -44,7 +51,10 @@
 			<TestWindow id={window.id} name={window.name} icon={window.icon} />
 		{/if}
 	{/each}
-	<Taskbar />
+	{#if showMainMenu}
+		<MainMenu />
+	{/if}
+	<Taskbar bind:showMainMenu={showMainMenu} />
 </main>
 
 <style>

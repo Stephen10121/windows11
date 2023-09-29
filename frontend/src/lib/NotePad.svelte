@@ -53,7 +53,7 @@
 			bind:value={newText}
 		/>
 		<div class="info">
-			<p class="lncol">Letters <span>{text.length}</span></p>
+			<p class="lncol">Letters <span>{newText.length}</span></p>
 			<div class="meta">
 				<div class="size"><p>100%</p></div>
 				<div class="wformat"><p>Windows (CRLF)</p></div>
