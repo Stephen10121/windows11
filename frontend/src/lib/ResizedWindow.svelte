@@ -84,6 +84,7 @@
 <div class="halfScreenright" bind:this={rightHalf}><div /></div>
 <div
 	on:mousedown={() => $focused = id}
+	on:keydown
 	class="window {$focused !== id ? 'notFocused' : ''}"
 	style="z-index: {$focused === id ? '8' : '6'};"
 	bind:this={resizeWindow}

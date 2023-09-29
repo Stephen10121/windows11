@@ -1,11 +1,13 @@
 <script lang="ts">
-    import { windows } from "../functions/store";
 	import ResizedWindow from "./ResizedWindow.svelte";
 	import WindowDragger from "./WindowDragger.svelte";
+    import { windows } from "../functions/store";
+	import { fade } from 'svelte/transition';
 
 	export let name: string;
 	export let icon: string;
 	export let id: string;
+	export let needsToSave = false;
 
 	let mouseDown = false;
 	let oldx: number;
@@ -29,11 +31,14 @@
 	}
 </script>
 
-<ResizedWindow {id} let:leftHalf let:rightHalf let:resizeWindow>
+<ResizedWindow {id} let:leftHalf let:rightHalf let:resizeWindow on:keydown>
 	<div class="header">
 		<div class="iconName">
 			<div class="imgCover"><img src={icon} alt="Icon" /></div>
 			<p>{name}</p>
+			{#if needsToSave}
+				<div transition:fade={{duration:150}} class="needsToSave" />
+			{/if}
 			<WindowDragger
 				bind:oldx={oldx}
 				bind:oldy={oldy}
@@ -78,7 +83,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: start;
-		gap: 15px;
 		padding-left: 15px;
 		position: relative;
 	}
@@ -92,11 +96,20 @@
 	}
 
 	.iconName p {
+		margin-left: 15px;
 		font-size: 1.2rem;
 		color: #ffffff;
 		font-weight: 100;
 		word-spacing: 3px;
 		letter-spacing: 1px;
+	}
+
+	.needsToSave {
+		margin-left: 5px;
+		width: 6px;
+		height: 6px;
+		background-color: #ffffff;
+		border-radius: 100vw;
 	}
 
 	.resize,

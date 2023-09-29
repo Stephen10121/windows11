@@ -3,15 +3,43 @@
 	import Taskbar from "./lib/Taskbar.svelte";
 	import NotePad from "./lib/NotePad.svelte";
 	import TestWindow from "./lib/TestWindow.svelte";
-	import { windows } from "./functions/store";
+	import { focused, windows } from "./functions/store";
+    import { onMount } from "svelte";
 	let backgroundImage = "background-dark.jpg";
+	let mounted = false;
+
+	$: {
+		if (mounted) {
+			const windowsSTR = JSON.stringify($windows);
+			window.localStorage.setItem("windows", windowsSTR);
+		}
+	}
+
+	onMount(() => {
+		const windowsSTR = window.localStorage.getItem("windows");
+
+		if (!windowsSTR) return mounted = true;
+		if (windowsSTR.length === 0) return mounted = true;
+
+		try {
+			const windowsJSON = JSON.parse(windowsSTR);
+			windows.set(windowsJSON);
+
+			if (windowsJSON > 0) {
+				focused.set(windowsJSON.reverse()[0].id);
+			}
+		} catch(err) {
+			console.error(err);
+		}
+		mounted = true;
+	});
 </script>
 
 <main style="background-image: url({backgroundImage})">
 	<Background />
 	{#each $windows as window (window.id)}
 		{#if window.appType === "notepad"}
-			<NotePad id={window.id} icon={window.icon} name={window.name} />
+			<NotePad id={window.id} name={window.name} text={window.textData} />
 		{:else if window.appType === "window"}
 			<TestWindow id={window.id} name={window.name} icon={window.icon} />
 		{/if}

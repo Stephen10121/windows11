@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { hitbox, windows } from "../functions/store";
+  import { addWindow, hitbox, windows } from "../functions/store";
   import { createEventDispatcher, onDestroy } from "svelte";
   const dispatch = createEventDispatcher();
   type Icons = {
@@ -125,12 +125,7 @@
     </select>
     <button
       on:click={() => {
-        windows.set([{ icon: windowIcon, id: windowId, name: windowName }]);
-        console.log("adding window", {
-          icon: windowIcon,
-          id: windowId,
-          name: windowName,
-        });
+        addWindow({ icon: windowIcon, id: windowId, name: windowName, appType: "window" });
       }}>Add Window</button
     >
   </div>
