@@ -3,7 +3,7 @@
 </script>
 
 <button on:click id="mainMenuOpener">
-    <img src={homeIcon} alt="Home Page" id="mainMenuOpener">
+    <img src="window.png" alt="Home Page" id="mainMenuOpener">
 </button>
 
 <style>
