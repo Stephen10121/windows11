@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ResizedWindow from "./ResizedWindow.svelte";
 	import WindowDragger from "./WindowDragger.svelte";
-    import { windows } from "../functions/store";
+    import { windows, type WindowBox, focused } from "../functions/store";
 	import { minimizeWindow } from "../functions/store";
 	import { fade } from 'svelte/transition';
 
@@ -17,7 +17,18 @@
 	let box: HTMLElement;
 
 	function close() {
-		windows.update((oldWindows) => oldWindows.filter((window) => window.id !== id));
+		let newFocus = "";
+		windows.update((oldWindows) => {
+			let newWindows: WindowBox[] = [];
+			for (let i=0;i<oldWindows.length;i++) {
+				if (oldWindows[i].id !== id) {
+					newWindows.push(oldWindows[i]);
+					newFocus = oldWindows[i].id
+				}
+			}
+			return newWindows;
+		});
+		focused.set(newFocus);
 	}
 
 	function moveMouse(e: MouseEvent, window2: HTMLElement, rightHalf: HTMLElement, leftHalf: HTMLElement) {
