@@ -6,6 +6,7 @@
 	export let icon = "notepad.png";
 	export let name = "aboutMe.txt - Notepad";
 	export let text = "About Me";
+	export let minimized: boolean;
 	let newText = text;
 
 	let textarea: HTMLTextAreaElement;
@@ -37,7 +38,7 @@
 	}
 </script>
 
-<Window {id} {name} {icon} needsToSave={newText !== text} on:keydown={checkForSave}>
+<Window {minimized} {id} {name} {icon} needsToSave={newText !== text} on:keydown={checkForSave}>
 	<div class="notepad">
 		<div class="extra">
 			<div class="fev">

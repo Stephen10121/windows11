@@ -2,12 +2,14 @@
 	import ResizedWindow from "./ResizedWindow.svelte";
 	import WindowDragger from "./WindowDragger.svelte";
     import { windows } from "../functions/store";
+	import { minimizeWindow } from "../functions/store";
 	import { fade } from 'svelte/transition';
 
 	export let name: string;
 	export let icon: string;
 	export let id: string;
 	export let needsToSave = false;
+	export let minimized = false;
 
 	let mouseDown = false;
 	let oldx: number;
@@ -31,7 +33,7 @@
 	}
 </script>
 
-<ResizedWindow {id} let:leftHalf let:rightHalf let:resizeWindow on:keydown>
+<ResizedWindow {minimized} {id} let:leftHalf let:rightHalf let:resizeWindow on:keydown>
 	<div class="header">
 		<div class="iconName">
 			<div class="imgCover"><img src={icon} alt="Icon" /></div>
@@ -53,7 +55,7 @@
 			/>
 		</div>
 		<div class="closebuttons">
-		<button class="minimize"><div class="dash" /></button>
+		<button class="minimize" on:click={() => minimizeWindow(id)}><div class="dash" /></button>
 		<button class="resize"><div class="box" /></button>
 		<button class="close" on:click={close}><img src="x.svg" alt="Close" /></button>
 		</div>

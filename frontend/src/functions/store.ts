@@ -22,7 +22,7 @@ export const windowIcons = writable<IconType[]>([
 		img: "recycle.png",
 		focus: false,
 		click: false,
-		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin." }
+		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin.", minimized: false }
 	},
 	{
 		id: "iconFolder",
@@ -30,7 +30,7 @@ export const windowIcons = writable<IconType[]>([
 		img: "folder.png",
 		focus: false,
 		click: false,
-		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin." }
+		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin.", minimized: false }
 	},
 	{
 		id: "iconFolder1",
@@ -38,7 +38,7 @@ export const windowIcons = writable<IconType[]>([
 		img: "folder.png",
 		focus: false,
 		click: false,
-		action: { id: "fileexplorer", name: "FileTree", appType: "notepad", textData: "This is the file explorer." }
+		action: { id: "fileexplorer", name: "FileTree", appType: "notepad", textData: "This is the file explorer.", minimized: false }
 	},
 	{
 		id: "iconAboutMe",
@@ -46,7 +46,7 @@ export const windowIcons = writable<IconType[]>([
 		img: "txtfile.ico",
 		focus: false,
 		click: false,
-		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin." }
+		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin.", minimized: false }
 	},
 ]);
 
@@ -62,7 +62,8 @@ type BasicWindow = {
 
 export type WindowBox = {
 	id: string,
-	name: string
+	name: string,
+	minimized: boolean
 } & (NotepadApp | BasicWindow)
 
 export const lightTheme = writable<boolean>(false);
@@ -81,4 +82,23 @@ export function addWindow(newWindow: WindowBox) {
 		return newWindows;
 	});
 	focused.set(newWindow.id);
+}
+
+export function minimizeWindow(id: string) {
+	let newFocused: string = "";
+	windows.update((oldWindows) => {
+		let newWindows: WindowBox[] = [];
+		for (let i=0;i<oldWindows.length;i++) {
+			if (oldWindows[i].id===id) {
+				newWindows.push({...oldWindows[i], minimized: true });
+			} else {
+				newWindows.push(oldWindows[i]);
+				if (!oldWindows[i].minimized) {
+					newFocused = oldWindows[i].id;
+				}
+			}
+		}
+		return newWindows;
+	});
+	focused.set(newFocused);
 }

@@ -1,9 +1,9 @@
 <script lang="ts">
-    import homeIcon from "../../assets/homeIcon.png";
+    export let icon: string;
 </script>
 
 <button on:click id="mainMenuOpener">
-    <img src="window.png" alt="Home Page" id="mainMenuOpener">
+    <img src={icon} alt="Home Page" id="mainMenuOpener">
 </button>
 
 <style>

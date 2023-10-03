@@ -1,12 +1,19 @@
 <script lang="ts">
 	import TaskbarIcon from "./taskbar/TaskbarIcon.svelte";
+	import { windows } from "../functions/store";
+    import ProgramIcon from "./taskbar/ProgramIcon.svelte";
 
 	export let showMainMenu: boolean;
 </script>
 
 <div class="taskbar">
-	<TaskbarIcon on:click={() => showMainMenu = !showMainMenu} />
-	<div class="spacer"></div>
+	<div class="rest">
+		<TaskbarIcon on:click={() => showMainMenu = !showMainMenu} icon="window.png" />
+		{#each $windows as window}
+			<ProgramIcon icon={window.appType === "notepad" ? "notepad.png" : "window.png"} id={window.id} />	
+		{/each}
+	</div>
+	<!-- <div class="spacer"></div> -->
 </div>
 
 <style>
@@ -21,9 +28,11 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		z-index: 200;
+		isolation: isolate;
 	}
-	.spacer {
-		width: 490px;
-		height: 5px;
+	.rest {
+		display: flex;
+		gap: 5px;
 	}
 </style>

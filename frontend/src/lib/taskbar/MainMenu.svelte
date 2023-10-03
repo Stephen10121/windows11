@@ -3,7 +3,7 @@
     import ProfileButton from './ProfileButton.svelte';
 </script>
 
-<div id="mainMenu" transition:fly={{ y: 800 }} class="window">
+<div id="mainMenu" transition:fly={{ y: 800, duration: 170 }} class="window">
     <div class="apps">
 
     </div>

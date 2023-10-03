@@ -2,6 +2,7 @@
 	import { focused } from "../functions/store";
     import ResizePointer from "./ResizePointer.svelte";
 	export let id: string;
+	export let minimized: boolean;
 
 	const MINIMUM_SCREEN_WIDTH = 470;
 	const MINIMUM_SCREEN_HEIGHT = 300;
@@ -85,7 +86,7 @@
 <div
 	on:mousedown={() => $focused = id}
 	on:keydown
-	class="window {$focused !== id ? 'notFocused' : ''}"
+	class="{minimized && "minimized"} window {$focused !== id ? 'notFocused' : ''}"
 	style="z-index: {$focused === id ? '8' : '6'};"
 	bind:this={resizeWindow}
 >
@@ -115,6 +116,10 @@
 		box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 2px, rgb(51, 51, 51) 0px 0px 0px 1px;
 		min-width: 470px;
 		min-height: 300px;
+	}
+
+	.window.minimized {
+		display: none;
 	}
 
 	.window.notFocused {
