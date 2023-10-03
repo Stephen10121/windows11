@@ -5,21 +5,24 @@
     export let id: string;
 
     function changeMinimized() {
+        let newFocused: string = "";
+        let minimize = false;
 		windows.update((oldWindows) => {
 			let newWindows: WindowBox[] = [];
 			for (let i=0;i<oldWindows.length;i++) {
 				if (oldWindows[i].id===id) {
-                    let minimize = oldWindows[i].minimized ? false: $focused===id ? !oldWindows[i].minimized : oldWindows[i].minimized;
+                    minimize = oldWindows[i].minimized ? false: $focused===id ? !oldWindows[i].minimized : oldWindows[i].minimized;
 					newWindows.push({...oldWindows[i], minimized: minimize });
-                    if (!minimize) {
-                        focused.set(id);
-                    }
 				} else {
 					newWindows.push(oldWindows[i]);
+                    if (!oldWindows[i].minimized) {
+                        newFocused = oldWindows[i].id;
+                    }
 				}
 			}
 			return newWindows;
 		});
+        focused.set(minimize ? newFocused : id);
 	}
 
     function iconClicked() {
