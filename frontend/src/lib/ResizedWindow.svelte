@@ -116,10 +116,11 @@
 		box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 2px, rgb(51, 51, 51) 0px 0px 0px 1px;
 		min-width: 470px;
 		min-height: 300px;
+		transition: transform 0.15s linear;
 	}
 
 	.window.minimized {
-		display: none;
+		transform: translateY(100vh);
 	}
 
 	.window.notFocused {
