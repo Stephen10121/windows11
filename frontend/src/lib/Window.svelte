@@ -23,7 +23,9 @@
 			for (let i=0;i<oldWindows.length;i++) {
 				if (oldWindows[i].id !== id) {
 					newWindows.push(oldWindows[i]);
-					newFocus = oldWindows[i].id
+					if (!oldWindows[i].minimized) {
+						newFocus = oldWindows[i].id
+					}
 				}
 			}
 			return newWindows;
