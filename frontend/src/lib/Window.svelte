@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ResizedWindow from "./ResizedWindow.svelte";
 	import WindowDragger from "./WindowDragger.svelte";
-    import { windows, type WindowBox, focused } from "../functions/store";
+    import { windows, type WindowBox, focused, changeFullscreen } from "../functions/store";
 	import { minimizeWindow } from "../functions/store";
 	import { fade } from 'svelte/transition';
 
@@ -10,6 +10,7 @@
 	export let id: string;
 	export let needsToSave = false;
 	export let minimized = false;
+	export let fullScreen = false;
 
 	let mouseDown = false;
 	let oldx: number;
@@ -46,7 +47,7 @@
 	}
 </script>
 
-<ResizedWindow {minimized} {id} let:leftHalf let:rightHalf let:resizeWindow on:keydown>
+<ResizedWindow {fullScreen} {minimized} {id} let:leftHalf let:rightHalf let:resizeWindow on:keydown>
 	<div class="header">
 		<div class="iconName">
 			<div class="imgCover"><img src={icon} alt="Icon" /></div>
@@ -69,7 +70,13 @@
 		</div>
 		<div class="closebuttons">
 		<button class="minimize" on:click={() => minimizeWindow(id)}><div class="dash" /></button>
-		<button class="resize"><div class="box" /></button>
+		<button class="resize" on:click={() => changeFullscreen(id)}>
+			{#if fullScreen}
+				<div in:fade={{duration:250}} class="minimize-box" />
+			{:else}
+				<div in:fade={{duration:250}} class="box"></div>
+			{/if}
+		</button>
 		<button class="close" on:click={close}><img src="x.svg" alt="Close" /></button>
 		</div>
 	</div>
@@ -150,6 +157,28 @@
 		height: 10px;
 		border: 1px solid white;
 		border-radius: 2px;
+	}
+
+	.resize .minimize-box {
+		width: 10px;
+		height: 10px;
+		/* border: 1px solid #ffffff; */
+		border-top: 1px solid #ffffff;
+		border-right: 1px solid #ffffff;
+		border-radius: 2px;
+		position: relative;
+		margin-bottom: 2px;
+	}
+
+	.minimize-box::after {
+		content: "";
+		position: absolute;
+		width: 9px;
+		height: 9px;
+		border: 1px solid #ffffff;
+		border-radius: 2px;
+		left: -2px;
+		top: 2px;
 	}
 
 	.closebuttons {

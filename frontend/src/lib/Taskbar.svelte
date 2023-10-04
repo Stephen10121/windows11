@@ -10,7 +10,7 @@
 	<div class="rest">
 		<TaskbarIcon on:click={() => showMainMenu = !showMainMenu} icon="window.png" />
 		{#each $windows as window}
-			<ProgramIcon icon={window.appType === "notepad" ? "notepad.png" : "window.png"} id={window.id} />	
+			<ProgramIcon icon={window.icon} id={window.id} />	
 		{/each}
 	</div>
 	<!-- <div class="spacer"></div> -->

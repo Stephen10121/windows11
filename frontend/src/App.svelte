@@ -46,7 +46,7 @@
 	<Background />
 	{#each $windows as window (window.id)}
 		{#if window.appType === "notepad"}
-			<NotePad id={window.id} name={window.name} text={window.textData} minimized={window.minimized} />
+			<NotePad id={window.id} name={window.name} text={window.textData} minimized={window.minimized} fullScreen={window.fullScreen} />
 		{:else if window.appType === "window"}
 			<TestWindow id={window.id} name={window.name} icon={window.icon} minimized={window.minimized} />
 		{/if}

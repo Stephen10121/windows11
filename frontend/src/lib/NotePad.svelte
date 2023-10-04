@@ -7,6 +7,7 @@
 	export let name = "aboutMe.txt - Notepad";
 	export let text = "About Me";
 	export let minimized: boolean;
+	export let fullScreen: boolean;
 	let newText = text;
 
 	let textarea: HTMLTextAreaElement;
@@ -38,7 +39,7 @@
 	}
 </script>
 
-<Window {minimized} {id} {name} {icon} needsToSave={newText !== text} on:keydown={checkForSave}>
+<Window {fullScreen} {minimized} {id} {name} {icon} needsToSave={newText !== text} on:keydown={checkForSave}>
 	<div class="notepad">
 		<div class="extra">
 			<div class="fev">

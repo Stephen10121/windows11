@@ -22,7 +22,7 @@ export const windowIcons = writable<IconType[]>([
 		img: "recycle.png",
 		focus: false,
 		click: false,
-		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin.", minimized: false }
+		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin.", minimized: false, icon: "notepad.png", fullScreen: false }
 	},
 	{
 		id: "iconFolder",
@@ -30,7 +30,7 @@ export const windowIcons = writable<IconType[]>([
 		img: "folder.png",
 		focus: false,
 		click: false,
-		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin.", minimized: false }
+		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin.", minimized: false, icon: "notepad.png", fullScreen: false }
 	},
 	{
 		id: "iconFolder1",
@@ -38,7 +38,7 @@ export const windowIcons = writable<IconType[]>([
 		img: "folder.png",
 		focus: false,
 		click: false,
-		action: { id: "fileexplorer", name: "FileTree", appType: "notepad", textData: "This is the file explorer.", minimized: false }
+		action: { id: "fileexplorer", name: "FileTree", appType: "notepad", textData: "This is the file explorer.", minimized: false, icon: "notepad.png", fullScreen: false }
 	},
 	{
 		id: "iconAboutMe",
@@ -46,7 +46,7 @@ export const windowIcons = writable<IconType[]>([
 		img: "txtfile.ico",
 		focus: false,
 		click: false,
-		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin.", minimized: false }
+		action: { id: "aboutmenotepad", name: "aboutMe.txt", appType: "notepad", textData: "Hello World!\nMy name is Stephen Gruzin.", minimized: false, icon: "notepad.png", fullScreen: false }
 	},
 ]);
 
@@ -56,14 +56,15 @@ type NotepadApp = {
 }
 
 type BasicWindow = {
-	appType: "window",
-	icon: string
+	appType: "window"
 }
 
 export type WindowBox = {
 	id: string,
 	name: string,
-	minimized: boolean
+	minimized: boolean,
+	fullScreen: boolean,
+	icon: string
 } & (NotepadApp | BasicWindow)
 
 export const lightTheme = writable<boolean>(false);
@@ -101,4 +102,18 @@ export function minimizeWindow(id: string) {
 		return newWindows;
 	});
 	focused.set(newFocused);
+}
+
+export function changeFullscreen(id: string) {
+	windows.update((oldWindows) => {
+		let newWindows: WindowBox[] = [];
+		for (let i=0;i<oldWindows.length;i++) {
+			if (oldWindows[i].id===id) {
+				newWindows.push({...oldWindows[i], fullScreen: !oldWindows[i].fullScreen });
+			} else {
+				newWindows.push(oldWindows[i]);
+			}
+		}
+		return newWindows;
+	});
 }

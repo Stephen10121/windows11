@@ -3,6 +3,7 @@
     import ResizePointer from "./ResizePointer.svelte";
 	export let id: string;
 	export let minimized: boolean;
+	export let fullScreen: boolean;
 
 	const MINIMUM_SCREEN_WIDTH = 470;
 	const MINIMUM_SCREEN_HEIGHT = 300;
@@ -86,7 +87,7 @@
 <div
 	on:mousedown={() => $focused = id}
 	on:keydown
-	class="{minimized && "minimized"} window {$focused !== id ? 'notFocused' : ''}"
+	class="{fullScreen && "fullscreen"} {minimized && "minimized"} window {$focused !== id ? 'notFocused' : ''}"
 	style="z-index: {$focused === id ? '8' : '6'};"
 	bind:this={resizeWindow}
 >

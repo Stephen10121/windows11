@@ -1,6 +1,7 @@
 <script lang="ts">
     import { fly } from 'svelte/transition'; 
     import ProfileButton from './ProfileButton.svelte';
+    import Shutdown from './Shutdown.svelte';
 </script>
 
 <div id="mainMenu" transition:fly={{ y: 800, duration: 170 }} class="window">
@@ -9,7 +10,7 @@
     </div>
     <div class="profile">
         <ProfileButton />
-        <ProfileButton />
+		<Shutdown />
     </div>
 </div>
 
